@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home - Classroom</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --light-blue: #e6f2ff;
+            --soft-blue: #b3d4ff;
+            --accent-blue: #4d94ff;
+            --text-dark: #1a3d7a;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-blue);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: white;
+            color: var(--accent-blue);
+            border: 2px solid var(--accent-blue);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            line-height: 1.5;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            box-sizing: border-box;
+            min-width: 180px;
+        }
+
+        .btn:hover {
+            background: var(--accent-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Open with...</h1>
+    <button class="btn" onclick="openInAboutBlank()">about:blank</button>                
+    <button class="btn" onclick="BlobWindow()">blob:https</button>                
+    <button class="btn" onclick="smartCopy('data:text/html;charset=utf-8,<!DOCTYPE%20html><html%20lang=\"en\"><head><meta%20charset=\"UTF-8\"><meta%20name=\"viewport\"%20content=\"width=device-width,initial-scale=1.0\"></head><body><script>async%20function%20fetchAndRun()%7Btry%7Bconst%20response=await%20fetch(\'https://raw.githubusercontent.com/mrdavidss-vgg/Catsploit/refs/heads/main/index.html\');if(!response.ok)%7Balert(\"Failed%20to%20fetch%20URL.\");return;%7Dconst%20text=await%20response.text();document.open();document.write(text);document.close();%7Dcatch(error)%7Bconsole.error(\"Error%20fetching%20the%20code:\",error);alert(\"Error%20fetching%20the%20code.%20Check%20the%20console%20for%20details.\");%7D%7DfetchAndRun();</script></body></html>')">Copy data:text</button>
+
+    <script>
+        function openInAboutBlank() {
+            const url = "https://catsploit.pages.dev/";
+            const newWindow = window.open("about:blank", "_blank");
+            
+            if (newWindow) {
+                const embedCode = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Embedded Page</title>
+                        <style>
+                            body {
+                                margin: 0;
+                                padding: 0;
+                                overflow: hidden;
+                            }
+                            iframe {
+                                width: 100%;
+                                height: 100vh;
+                                border: none;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <iframe src="${url}" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+                    </body>
+                    </html>
+                `;
+                
+                newWindow.document.write(embedCode);
+                newWindow.document.close();
+            } else {
+                alert("Please allow pop-ups for this site");
+            }
+        }
+
+        function BlobWindow() {
+            const htmlContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Google</title>
+                    <link rel="icon" type="image/png" href="https://i.ibb.co/gZG0HCZq/google.png">
+                    <meta charset="UTF-8">
+                    <style>
+                        body {
+                            margin: 0;
+                            height: 100vh;
+                            padding: 0;
+                            overflow: hidden;
+                        }
+                        iframe {
+                            width: 100%;
+                            height: 100%;
+                            border: none;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <iframe src="https://catsploit.pages.dev/" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-downloads"></iframe>
+                </body>
+                </html>
+            `;
+
+            const blob = new Blob([htmlContent], { type: "text/html" });
+            const blobUrl = URL.createObjectURL(blob);
+
+            let newBlankTab = window.open(blobUrl, "_blank");
+
+            if (newBlankTab) {
+                newBlankTab.onload = () => {
+                    newBlankTab.document.title = "Untitled document - Google Docs";
+                    let link = newBlankTab.document.createElement("link");
+                    link.rel = "icon";
+                    link.href = "https://ssl.gstatic.com/docs/doclist/images/mediatype/icon_1_document_x32.png";
+                    newBlankTab.document.head.appendChild(link);
+                };
+            } else {
+                alert("Allow pop-ups at the right of the search bar. Then reload the page.");
+            }
+        }
+
+let copyTimeout;
+let currentAlert;
+
+function smartCopy(text) {
+  if (copyTimeout) clearTimeout(copyTimeout);
+  if (currentAlert) document.body.removeChild(currentAlert);
+
+  currentAlert = document.createElement('div');
+  currentAlert.innerHTML = `
+    <div style="
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #b3d4ff;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+    ">
+      <span>Copied to clipboard!</span>
+      <button style="
+        margin-left: 15px;
+        background: #5094fc;
+        color: white;
+        border: none;
+        padding: 3px 8px;
+        border-radius: 3px;
+        cursor: pointer;
+      ">OK</button>
+    </div>
+  `;
+
+  const okButton = currentAlert.querySelector('button');
+  okButton.onclick = () => {
+    clearTimeout(copyTimeout);
+    document.body.removeChild(currentAlert);
+    currentAlert = null;
+  };
+
+  document.body.appendChild(currentAlert);
+
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textarea);
+
+    copyTimeout = setTimeout(() => {
+    if (currentAlert) {
+      document.body.removeChild(currentAlert);
+      currentAlert = null;
+    }
+  }, 5000);
+}
+    </script>
+</body>
+</html>
